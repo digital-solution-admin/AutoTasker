@@ -1,0 +1,38 @@
+version: '3.8'
+
+# Development overrides
+# This file is automatically loaded by docker-compose for development
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - REACT_APP_API_URL=http://localhost:5000
+      - REACT_APP_N8N_URL=http://localhost:5678
+      - REACT_APP_ENVIRONMENT=development
+      - CHOKIDAR_USEPOLLING=true
+    command: npm start
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./backend:/app
+    environment:
+      - FLASK_ENV=development
+      - FLASK_DEBUG=1
+    command: python app.py
+
+  # Remove nginx and other optional services for development
+  nginx:
+    profiles:
+      - production
+
+  redis:
+    profiles:
+      - production
