@@ -1,0 +1,78 @@
+{
+  "name": "Email Summarizer",
+  "description": "Automatically summarize incoming emails using AI",
+  "nodes": [
+    {
+      "id": "1",
+      "name": "Trigger",
+      "type": "Webhook",
+      "position": {
+        "x": 100,
+        "y": 100
+      },
+      "parameters": {
+        "path": "incoming_email",
+        "responseMode": "lastNode"
+      }
+    },
+    {
+      "id": "2",
+      "name": "Extract Email Content",
+      "type": "Function",
+      "position": {
+        "x": 300,
+        "y": 100
+      },
+      "parameters": {
+        "functionCode": "return { text: $input.body.emailContent };"
+      }
+    },
+    {
+      "id": "3",
+      "name": "Summarize Email",
+      "type": "HTTP Request",
+      "position": {
+        "x": 500,
+        "y": 100
+      },
+      "parameters": {
+        "url": "http://backend:5000/ai/summary",
+        "method": "POST",
+        "body": {
+          "text": "={{ $node[\"Extract Email Content\"].json[\"text\"] }}"
+        }
+      }
+    },
+    {
+      "id": "4",
+      "name": "Send Notification",
+      "type": "HTTP Request",
+      "position": {
+        "x": 700,
+        "y": 100
+      },
+      "parameters": {
+        "url": "http://backend:5000/notification/send",
+        "method": "POST",
+        "body": {
+          "subject": "Email Summary",
+          "message": "={{ $node[\"Summarize Email\"].json[\"summary\"] }}"
+        }
+      }
+    }
+  ],
+  "connections": [
+    {
+      "source": "1",
+      "target": "2"
+    },
+    {
+      "source": "2",
+      "target": "3"
+    },
+    {
+      "source": "3",
+      "target": "4"
+    }
+  ]
+}
