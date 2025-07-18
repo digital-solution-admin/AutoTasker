@@ -1,0 +1,51 @@
+{
+  "database": {
+    "type": "sqlite",
+    "sqlite": {
+      "database": "n8n.sqlite"
+    }
+  },
+  "credentials": {
+    "overwrite": {
+      "data": {
+        "openai": {
+          "apiKey": "${OPENAI_API_KEY}"
+        },
+        "anthropic": {
+          "apiKey": "${ANTHROPIC_API_KEY}"
+        }
+      }
+    }
+  },
+  "nodes": {
+    "communityPackages": {
+      "enabled": true,
+      "registry": "https://registry.npmjs.org"
+    }
+  },
+  "workflows": {
+    "defaultName": "AutoTasker Workflow"
+  },
+  "userManagement": {
+    "disabled": true
+  },
+  "publicApi": {
+    "disabled": false,
+    "path": "api"
+  },
+  "endpoints": {
+    "webhooks": {
+      "path": "webhook"
+    },
+    "webhooksTest": {
+      "path": "webhook-test"
+    }
+  },
+  "logging": {
+    "level": "info",
+    "outputs": ["console", "file"],
+    "file": {
+      "filePath": "logs/n8n.log"
+    }
+  }
+}
